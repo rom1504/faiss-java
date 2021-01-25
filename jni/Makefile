@@ -37,6 +37,8 @@ build: _swigfaiss.so
 	$(eval _resources_path = ../src/main/resources)
 	mkdir -p ${_resources_path}
 	cp _swigfaiss.so ${_resources_path}
+	ldd _swigfaiss.so
+	ld _swigfaiss.so
 	#cp _swigfaiss_avx2.so ${_resources_path}
 	cp /usr/lib64/libgomp.so.1 ${_resources_path}
 	cp /usr/lib64/libquadmath.so.0.0.0 ${_resources_path}
