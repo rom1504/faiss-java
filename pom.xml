@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.victor-paltz</groupId>
+    <groupId>com.github.rom1504</groupId>
     <artifactId>JFaiss-CPU</artifactId>
     <version>2.2.0</version>
 
@@ -32,7 +32,7 @@
     <description>
         Faiss v1.6.3 bindings for Java
     </description>
-    <url>https://github.com/victor-paltz/JFaiss-CPU.git</url>
+    <url>https://github.com/rom1504/faiss-java.git</url>
 
     <licenses>
         <license>
@@ -72,9 +72,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:https://github.com/victor-paltz/JFaiss-CPU.git</connection>
-        <developerConnection>scm:git:ssh://github.com/victor-paltz/JFaiss-CPU.git</developerConnection>
-        <url>https://github.com/victor-paltz/JFaiss-CPU.git</url>
+        <connection>scm:git:https://github.com/rom1504/faiss-java.git</connection>
+        <developerConnection>scm:git:ssh://github.com/rom1504/faiss-java.git</developerConnection>
+        <url>https://github.com/rom1504/faiss-java.git</url>
         <tag>HEAD</tag>
     </scm>
 
