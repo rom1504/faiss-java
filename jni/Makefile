@@ -14,18 +14,18 @@ CPPFLAGS = -pthread -Wl,--sysroot=/ -Wsign-compare -DNDEBUG -g -fwrapv -O3 -Wall
 
 LDFLAGS=-l:libopenblas.a -lgfortran -lgomp
 CXXFLAGS=-fvisibility=hidden -fdata-sections -ffunction-sections
-LDFLAGS= -pthread -shared -L /home/r.beaumont/sync/faiss-wheels/faiss_local/lib -Wl,--no-as-needed -Wl,--sysroot=/ -fopenmp -lrt -s -Wl,--gc-sections -L/usr/lib64 -L/usr/local/lib -l:libfaiss.a -l:libopenblas.a -l:libgfortran.so.3 -lopenblas
+LDFLAGS= -pthread -shared -L /usr/local/lib -Wl,--no-as-needed -Wl,--sysroot=/ -fopenmp -lrt -s -Wl,--gc-sections -L/usr/lib64 -L/usr/local/lib -l:libfaiss.a -l:libopenblas.a -l:libgfortran.so.3 -lopenblas
 
 all: build
 
 # Also silently generates swigfaiss.py.
 swigfaiss.cpp: swigfaiss.swig ../faiss/build/faiss/libfaiss.a
 	mkdir -p $(SWIGJAVASRC)
-	$(SWIG) -java -c++ -DSWIGWORDSIZE64 -Doverride= -I../faiss_local/include -I../faiss/faiss $(SWIGFLAGS) -package com.vectorsearch.faiss.swig -outdir $(SWIGJAVASRC) -o $@ $<
+	$(SWIG) -java -c++ -DSWIGWORDSIZE64 -Doverride= -I/usr/local/include -I../faiss/faiss $(SWIGFLAGS) -package com.vectorsearch.faiss.swig -outdir $(SWIGJAVASRC) -o $@ $<
 
 %.o: %.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(CPUFLAGS) $(JAVACFLAGS) \
-               -I../faiss_local/include -I../faiss/faiss -c $< -o $@
+               -I/usr/local/include -I../faiss/faiss -c $< -o $@
 
 # Extension is .so even on OSX.
 _%.so: %.o  ../faiss/build/faiss/libfaiss.a

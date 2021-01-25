@@ -66,7 +66,6 @@ jobs:
           -DFAISS_ENABLE_GPU=${FAISS_ENABLE_GPU} \
           -DFAISS_ENABLE_PYTHON=OFF -DBUILD_TESTING=ON \
           -DFAISS_OPT_LEVEL=${FAISS_OPT_LEVEL} \
-          -DCMAKE_CUDA_ARCHITECTURES="35;52;60;61;70;75" \
           -DCMAKE_BUILD_TYPE=Release
         make -C build -j4
         make -C build install
@@ -77,20 +76,3 @@ jobs:
         make build
         cd ..
         mvn package
-    - name: Build package
-      run: |
-        mv faiss/faiss/python/swigfaiss.swig faiss/faiss/python/swigfaiss.i
-        touch faiss/contrib/__init__.py
-
-        pip install --no-cache-dir -U pip
-        pip install --no-cache-dir wheel numpy==${NUMPY_VERSION}
-        python setup.py sdist
-        pip wheel . -w wheelhouse --no-deps --verbose
-        auditwheel repair wheelhouse/faiss*.whl -w dist
-        ls -lh dist
-    - name: Install and test
-      if: matrix.python-version != 'cp39-cp39'
-      run: |
-        pip install --no-cache-dir dist/faiss*.whl
-        pip install --no-cache-dir pytest scipy torch
-        pytest --deselect="faiss/tests/test_contrib.py::TestComputeGT::test_compute_GT"
