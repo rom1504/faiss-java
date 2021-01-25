@@ -54,6 +54,7 @@ jobs:
         ./configure
         make -j4
         make install
+        echo "SWIG=`which swig`" >> $GITHUB_ENV
         cd ..
         echo "FAISS_LDFLAGS=-l:libfaiss${FAISS_LIBRARY_SUFFIX}.a -l:libopenblas.a -lgfortran" >> $GITHUB_ENV
         echo "CXXFLAGS=-fvisibility=hidden -fdata-sections -ffunction-sections" >> $GITHUB_ENV
