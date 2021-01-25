@@ -82,4 +82,5 @@ jobs:
         mvn clean test -Dtest=FaissTestRunner
     - name: Publish package
       run: mvn -B deploy
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
