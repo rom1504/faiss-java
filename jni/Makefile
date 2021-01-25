@@ -11,7 +11,7 @@ endif
 FAISS_INCLUDE=/usr/local/include
 JAVACFLAGS = -I /usr/lib/jvm/java/include/ -I /usr/lib/jvm/java/include/linux/
 SWIGJAVASRC = ../src/main/java/com/vectorsearch/faiss/swig
-CPPFLAGS = -pthread -Wl,--sysroot=/ -Wsign-compare -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes -fPIC -DFINTEGER=int -std=c++11 -m64 -Wno-sign-compare -fopenmp -fdata-sections -ffunction-sections
+CPPFLAGS = -pthread -Wl,--sysroot=/ -Wsign-compare -DNDEBUG -g -fwrapv -O3 -Wstrict-prototypes -fPIC -DFINTEGER=int -std=c++11 -m64 -Wno-sign-compare -fopenmp -fdata-sections -ffunction-sections
 
 LDFLAGS=-l:libopenblas.a -lgfortran -lgomp
 CXXFLAGS=-fvisibility=hidden -fdata-sections -ffunction-sections
