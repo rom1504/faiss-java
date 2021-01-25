@@ -1,0 +1,3 @@
+# faiss-java
+
+java package

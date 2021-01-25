@@ -1,0 +1,11 @@
+.idea
+faiss_local
+faissenv
+src/main/java/com/vectorsearch/faiss/swig
+src/main/resources
+swig-4.0.2
+target
+a.out
+a.py
+*.iml
+wip
