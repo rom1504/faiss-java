@@ -889,6 +889,7 @@ void * cast_integer_to_void_ptr (long long x) {
 
 %ignore faiss::BufferList::Buffer;
 %ignore faiss::RangeSearchPartialResult::QueryResult;
+%ignore faiss::RangeSearchPartialResult::finalize;
 %ignore faiss::IDSelectorBatch::set;
 %ignore faiss::IDSelectorBatch::bloom;
 
@@ -932,12 +933,5 @@ struct MapLong2Long {
 
 
 
-
-%inline %{
-    void wait() {
-        // in gdb, use return to get out of this function
-        for(int i = 0; i == 0; i += 0);
-    }
- %}
 
 // End of file...

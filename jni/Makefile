@@ -8,6 +8,7 @@ ifneq ($(strip $(NVCC)),)
 endif
 
 
+FAISS_INCLUDE=/usr/local/include
 JAVACFLAGS = -I /usr/lib/jvm/java/include/ -I /usr/lib/jvm/java/include/linux/
 SWIGJAVASRC = ../src/main/java/com/vectorsearch/faiss/swig
 CPPFLAGS = -pthread -Wl,--sysroot=/ -Wsign-compare -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes -fPIC -DFINTEGER=int -std=c++11 -m64 -Wno-sign-compare -fopenmp -fdata-sections -ffunction-sections
@@ -21,11 +22,11 @@ all: build
 # Also silently generates swigfaiss.py.
 swigfaiss.cpp: swigfaiss.swig ../faiss/build/faiss/libfaiss.a
 	mkdir -p $(SWIGJAVASRC)
-	$(SWIG) -java -c++ -DSWIGWORDSIZE64 -Doverride= -I/usr/local/include -I../faiss/faiss $(SWIGFLAGS) -package com.vectorsearch.faiss.swig -outdir $(SWIGJAVASRC) -o $@ $<
+	$(SWIG) -java -c++ -DSWIGWORDSIZE64 -Doverride= -I$(FAISS_INCLUDE) -I../faiss/faiss $(SWIGFLAGS) -package com.vectorsearch.faiss.swig -outdir $(SWIGJAVASRC) -o $@ $<
 
 %.o: %.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(CPUFLAGS) $(JAVACFLAGS) \
-               -I/usr/local/include -I../faiss/faiss -c $< -o $@
+               -I$(FAISS_INCLUDE) -I../faiss/faiss -c $< -o $@
 
 # Extension is .so even on OSX.
 _%.so: %.o  ../faiss/build/faiss/libfaiss.a
