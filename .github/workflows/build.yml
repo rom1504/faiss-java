@@ -72,6 +72,7 @@ jobs:
         cd ..
     - name: Build java
       run: |
+        yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel maven
         cd jni
         make build
         cd ..
