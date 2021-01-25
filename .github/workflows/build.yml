@@ -72,7 +72,7 @@ jobs:
         cd ..
     - name: Build java
       run: |
-        cd ../../jni
+        cd jni
         make build
         cd ..
         mvn package
