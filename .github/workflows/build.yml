@@ -81,8 +81,8 @@ jobs:
       run: |
         mvn clean test -Dtest=FaissTestRunner
     - uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
+      with:
+        java-version: 1.8
     - name: Publish package
       run: mvn -B deploy
       env:
