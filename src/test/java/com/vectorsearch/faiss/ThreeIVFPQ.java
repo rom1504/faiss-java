@@ -43,7 +43,7 @@ public class ThreeIVFPQ extends FaissTestCase {
 
     @Override
     public void search() {
-        final int rn = 1;
+        final int rn = 40;
         final floatArray distances = new floatArray(queryRowCount * rn);
         final longArray indices = new longArray(queryRowCount * rn);
         index.setNprobe(10);
