@@ -43,7 +43,7 @@ build: _swigfaiss.so
 	cp /usr/lib64/libgomp.so.1 ${_resources_path}
 	cp /usr/lib64/libquadmath.so.0 ${_resources_path}
 	cp /usr/lib64/libgfortran.so.3 ${_resources_path}
-	cp /usr/lib64/libopenblas.so ${_resources_path}
+	cp /usr/lib64/libopenblas.so.0 ${_resources_path}
 
 
 clean:
