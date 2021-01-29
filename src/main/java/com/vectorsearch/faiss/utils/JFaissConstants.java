@@ -7,5 +7,5 @@ public class JFaissConstants {
     public static final List<String> SUPPORTED_OS = Collections.singletonList("Linux");
     public static final String SWIGFAISS_SO_FILE = "/_swigfaiss.so";
     public static final String[] REQUIRED_SO_FILE = new String[]{
-            "/libopenblas.so", "/libgomp.so.1", "/libquadmath.so.0", "/libgfortran.so.3"};
+            "/libopenblas.so.0", "/libgomp.so.1", "/libquadmath.so.0", "/libgfortran.so.3"};
 }

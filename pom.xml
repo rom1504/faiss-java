@@ -6,7 +6,7 @@
 
     <groupId>com.github.victor-paltz</groupId>
     <artifactId>JFaiss-CPU</artifactId>
-    <version>2.4.0</version>
+    <version>2.5.0</version>
 
     <properties>
         <maven.compiler.target>8</maven.compiler.target>
@@ -30,7 +30,7 @@
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>
-        Faiss v1.6.3 bindings for Java
+        Faiss v1.6.5 bindings for Java
     </description>
     <url>https://github.com/victor-paltz/JFaiss-CPU.git</url>
 
