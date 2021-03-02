@@ -8,21 +8,22 @@ ifneq ($(strip $(NVCC)),)
 endif
 
 
-FAISS_INCLUDE=/usr/local/include
+FAISS_INCLUDE=../faiss/dist/include
+FAISS_LD_LIB=-L../faiss/dist/lib64
 JAVACFLAGS = -I /usr/lib/jvm/java/include/ -I /usr/lib/jvm/java/include/linux/
 SWIGJAVASRC = ../src/main/java/com/vectorsearch/faiss/swig
 CPPFLAGS = -pthread -Wl,--sysroot=/ -Wsign-compare -DNDEBUG -g -fwrapv -O3 -Wstrict-prototypes -fPIC -DFINTEGER=int -std=c++11 -m64 -Wno-sign-compare -fopenmp -fdata-sections -ffunction-sections
 
 LDFLAGS=-l:libopenblas.a -lgfortran -lgomp
 CXXFLAGS=-fvisibility=hidden -fdata-sections -ffunction-sections
-LDFLAGS= -pthread -shared -L /usr/local/lib -Wl,--no-as-needed -Wl,--sysroot=/ -fopenmp -lrt -s -Wl,--gc-sections -L/usr/lib64 -L/usr/local/lib -L../faiss/build/faiss -l:libfaiss.a -l:libopenblas.a -l:libgfortran.so.3 -lopenblas
+LDFLAGS= -pthread -shared -L /usr/local/lib -Wl,--no-as-needed -Wl,--sysroot=/ -fopenmp -lrt -s -Wl,--gc-sections -L/usr/lib64 -L/usr/local/lib ${FAISS_LD_LIB} -l:libfaiss.a -l:libopenblas.a -l:libgfortran.so.3 -lopenblas
 
 all: build
 
 # Also silently generates swigfaiss.py.
 swigfaiss.cpp: swigfaiss.swig ../faiss/build/faiss/libfaiss.a
 	mkdir -p $(SWIGJAVASRC)
-	$(SWIG) -java -c++ -DSWIGWORDSIZE64 -Doverride= -I$(FAISS_INCLUDE) -I../faiss $(SWIGFLAGS) -package com.vectorsearch.faiss.swig -outdir $(SWIGJAVASRC) -o $@ $<
+	$(SWIG) -java -c++ -DSWIGWORDSIZE64 -Doverride= -I$(FAISS_INCLUDE) $(SWIGFLAGS) -package com.vectorsearch.faiss.swig -outdir $(SWIGJAVASRC) -o $@ $<
 
 %.o: %.cpp
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(CPUFLAGS) $(JAVACFLAGS) \
