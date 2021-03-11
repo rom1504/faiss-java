@@ -14,17 +14,20 @@
 // SWIGPYTHON: Python-specific code
 // GPU_WRAPPER: also compile interfaces for GPU.
 
+#pragma SWIG nowarn=503,516,813,401
 #ifdef SWIGJAVA
+%include "swigjava.i"
+
 %include "arrays_java.i"
 //%apply int[] {int *};
 //%apply double[] {double *};
 //%apply float[] {float *};
-//%apply long[] {long *};
+//%apply long[] {long long *};
 %include "carrays.i"
-%array_class(int, intArray);
+%array_class(int32_t, intArray);
 %array_class(float, floatArray);
-%array_class(long, longArray);
 %array_class(double, doubleArray);
+%array_class(int64_t, longArray);
 #endif
 
 #ifdef GPU_WRAPPER
@@ -49,11 +52,6 @@
 #pragma SWIG nowarn=341
 #pragma SWIG nowarn=512
 #pragma SWIG nowarn=362
-
-%include <stdint.i>
-
-typedef uint64_t size_t;
-
 
 #define __restrict
 
@@ -255,6 +253,8 @@ namespace std {
  * Parse headers
  *******************************************************************/
 
+%ignore faiss::RangeSearchResult::RangeSearchResult(idx_t, bool);
+%ignore faiss::IndexSplitVectors::IndexSplitVectors(idx_t, bool);
 %include <faiss/impl/platform_macros.h>
 
 %ignore *::cmp;
@@ -367,7 +367,6 @@ void gpu_sync_all_devices()
 
 
 #endif
-
 // order matters because includes are not recursive
 
 %include  <faiss/utils/utils.h>
@@ -445,10 +444,15 @@ void gpu_sync_all_devices()
 %template(ThreadedIndexBase) faiss::ThreadedIndex<faiss::Index>;
 %template(ThreadedIndexBaseBinary) faiss::ThreadedIndex<faiss::IndexBinary>;
 
+%ignore faiss::IndexShardsTemplate<faiss::Index>::IndexShardsTemplate(idx_t, bool);
+%ignore faiss::IndexShardsTemplate<faiss::IndexBinary>::IndexShardsTemplate(idx_t, bool);
 %include  <faiss/IndexShards.h>
 %template(IndexShards) faiss::IndexShardsTemplate<faiss::Index>;
 %template(IndexBinaryShards) faiss::IndexShardsTemplate<faiss::IndexBinary>;
 
+
+%ignore faiss::IndexReplicasTemplate<faiss::Index>::IndexReplicasTemplate(idx_t, bool);
+%ignore faiss::IndexReplicasTemplate<faiss::IndexBinary>::IndexReplicasTemplate(idx_t, bool);
 %include  <faiss/IndexReplicas.h>
 %template(IndexReplicas) faiss::IndexReplicasTemplate<faiss::Index>;
 %template(IndexBinaryReplicas) faiss::IndexReplicasTemplate<faiss::IndexBinary>;
@@ -458,7 +462,6 @@ void gpu_sync_all_devices()
 %template(IndexBinaryIDMap) faiss::IndexIDMapTemplate<faiss::IndexBinary>;
 %template(IndexIDMap2) faiss::IndexIDMap2Template<faiss::Index>;
 %template(IndexBinaryIDMap2) faiss::IndexIDMap2Template<faiss::IndexBinary>;
-
 
 
 %ignore faiss::BufferList::Buffer;
@@ -1007,4 +1010,3 @@ struct MapLong2Long {
 
 %}
  // End of file...
- 

@@ -36,7 +36,7 @@ public class ThreeIVFPQ extends FaissTestCase {
         index.train(inputRowCount, inputVectors.cast());
         index.add(inputRowCount, inputVectors.cast());
         final boolean isTrained = index.getIs_trained();
-        final int nTotal = index.getNtotal();
+        final long nTotal = index.getNtotal();
         final String msg = "isTrained = " + isTrained + ", nTotal = " + nTotal;
         LOGGER.info(msg);
     }
@@ -51,7 +51,7 @@ public class ThreeIVFPQ extends FaissTestCase {
         omp_set_num_threads(1);
         long startTime = System.nanoTime();
         for(int i=0;i<1000;i++) {
-            index.search(queryRowCount, queryVectors.cast(), rn, distances.cast(), indices.cast());
+            index.search(queryRowCount, queryVectors.cast(), (long)rn, distances.cast(), indices.cast());
         }
         long endTime = System.nanoTime();
         System.out.println("Total execution time search: " + (endTime-startTime)/1000/1000 + "µs");

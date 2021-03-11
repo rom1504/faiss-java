@@ -35,6 +35,9 @@ public class NativeUtils2 {
      */
     private NativeUtils2() {
     }
+    public static void loadLibraryFromJar(String path) throws IOException {
+        loadLibraryFromJar(path, new String[0]);
+    }
 
     /**
      * Loads library from current JAR archive

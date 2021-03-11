@@ -14,28 +14,55 @@ env:
   NUMPY_VERSION: '1.18.0'
   FAISS_OPT_LEVEL: generic
   FAISS_LIBRARY_SUFFIX: ''
+  FAISS_ENABLE_GPU: 'OFF'
   TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
   TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
 jobs:
-  build-linux:
+  build_osx:
+    runs-on: macos-latest
+    steps:
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Install Homebrew packages
+        run: |
+          brew install cmake swig libomp
+      - uses: actions/checkout@v1
+        with:
+          submodules: true
+      - name: Build
+        run: |
+          make build
+      - name: test
+        run: |
+          make test
+      - name: Upload jni library
+        uses: actions/upload-artifact@v2
+        with:
+          name: jni_macos
+          path: |
+            src/main/resources/
+      - name: Upload swig java file
+        uses: actions/upload-artifact@v2
+        with:
+          name: swig_macos
+          path: |
+            src/main/java/com/vectorsearch/faiss/swig/
+
+  build_linux:
     runs-on: ubuntu-latest
     container: quay.io/pypa/manylinux2014_x86_64
     strategy:
       matrix:
-        python-version:
-          - cp36-cp36m
         cuda:
           - false
         opt:
           - 'generic'
-    env:
-      FAISS_ENABLE_GPU: 'OFF'
     steps:
     - uses: actions/checkout@v1
       with:
         submodules: true
-    - name: Set up Python
-      run: echo "/opt/python/${{ matrix.python-version }}/bin" >> $GITHUB_PATH
     - name: Set optimization level
       if: matrix.opt != 'generic'
       run: |
@@ -51,24 +78,72 @@ jobs:
             java-1.8.0-openjdk \
             java-1.8.0-openjdk-devel \
             maven
+    - name: Download and install swig
+      run: |
         curl -fsSLO --retry 3 http://prdownloads.sourceforge.net/swig/swig-${SWIG_VERSION}.tar.gz
         tar xzf swig-${SWIG_VERSION}.tar.gz
         cd swig-${SWIG_VERSION}
         ./configure
         make -j4
         make install
-        echo "SWIG=`which swig`" >> $GITHUB_ENV
-        cd ..
-        echo "FAISS_LDFLAGS=-l:libfaiss${FAISS_LIBRARY_SUFFIX}.a -l:libopenblas.a -lgfortran" >> $GITHUB_ENV
-        echo "CXXFLAGS=-fvisibility=hidden -fdata-sections -ffunction-sections" >> $GITHUB_ENV
+
     - name: Build
       run: |
-        make build
+          make build
     - name: test
       run: |
         make test
+    - name: Upload jni library
+      uses: actions/upload-artifact@v2
+      with:
+        name: jni_linux
+        path: |
+          src/main/resources/
+    - name: Upload swig java file
+      uses: actions/upload-artifact@v2
+      with:
+        name: swig_linux
+        path: |
+          src/main/java/com/vectorsearch/faiss/swig/
+
+  deploy:
+    needs: [build_linux, build_osx]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        cuda:
+          - false
+        opt:
+          - 'generic'
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        submodules: true
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+    - name: Download artifacts
+      uses: actions/download-artifact@v2
+    - name: Move to resources folders
+      run: |
+        mkdir -p src/main/resources/
+        mkdir -p src/main/java/com/vectorsearch/faiss/swig/
+        mv jni_linux/* src/main/resources/.
+        mv jni_macos/* src/main/resources/.
+        mv swig_linux/* src/main/java/com/vectorsearch/faiss/swig/.
+    - name: Build
+      run: |
+          make build_java_only
+    - name: 'Upload Artifact'
+      uses: actions/upload-artifact@v2
+      with:
+          name: cross_build_jar
+          path: |
+            target/JFaiss-CPU-*.jar
     - name: Release Maven package
       uses: samuelmeuli/action-maven-publish@v1
+      if: ${{ github.event_name == 'release' }}
       with:
         gpg_private_key: ${{ secrets.gpg_private_key }}
         gpg_passphrase: ${{ secrets.gpg_passphrase }}

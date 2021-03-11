@@ -18,7 +18,7 @@ public abstract class FaissTestCase {
             System.out.println("hi");
             JFaissInitializer.initialize();
             System.out.println("ok");
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
