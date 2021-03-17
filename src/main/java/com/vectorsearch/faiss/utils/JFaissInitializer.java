@@ -10,7 +10,7 @@ public class JFaissInitializer {
         if (!initialized) {
             initialized = true;
             if (JFaissConstants.isUnix()) {
-                NativeUtils2.loadLibraryFromJar(JFaissConstants.SWIGFAISS_SO_FILE_UNIX);
+                NativeUtils2.loadLibraryFromJar(JFaissConstants.SWIGFAISS_SO_FILE_UNIX, JFaissConstants.REQUIRED_SO_FILE_UNIX);
             } else if (JFaissConstants.isMac()) {
                 NativeUtils2.loadLibraryFromJar(JFaissConstants.SWIGFAISS_SO_FILE_DARWIN);
             } else {

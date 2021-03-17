@@ -10,10 +10,7 @@ public class JFaissConstants {
     public static final String SWIGFAISS_SO_FILE_WINDOWS = "/win32/libswigfaiss.dll";
 
     public static final String[] REQUIRED_SO_FILE_UNIX = new String[]{
-            "/libgomp.so.1", "/libquadmath.so.0", "/libgfortran.so.3", "/libopenblas.so.0"};
-
-    public static final String[] REQUIRED_SO_FILE_DARWIN = new String[]{
-            "/libgomp.dylib.1", "/libquadmath.dylib.0", "/libgfortran.dylib.3", "/libopenblas.dylib.0"};
+            "/linux/libgomp.so.1", "/linux/libquadmath.so.0", "/linux/libgfortran.so.3", "/linux/libopenblas.so.0"};
 
     public static boolean isValidOS() {
         return isUnix() || isMac() || isWindows();

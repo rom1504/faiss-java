@@ -52,8 +52,6 @@ swig_add_library(swigfaiss
   SOURCES swigfaiss.swig
 )
 
-
-
 find_package(Java REQUIRED)
 include(UseJava)
 find_package(JNI REQUIRED)
@@ -69,12 +67,14 @@ target_link_libraries(swigfaiss PRIVATE OpenMP::OpenMP_CXX)
 find_package(MKL)
 if(MKL_FOUND)
   target_link_libraries(swigfaiss PRIVATE ${MKL_LIBRARIES})
+  message (STATUS "MKL_LIBRARIES=${MKL_LIBRARIES}")
 else()
   find_package(BLAS REQUIRED)
   target_link_libraries(swigfaiss PRIVATE ${BLAS_LIBRARIES})
-
+  message (STATUS "BLAS_LIBRARIES=${BLAS_LIBRARIES}")
   find_package(LAPACK REQUIRED)
   target_link_libraries(swigfaiss PRIVATE ${LAPACK_LIBRARIES})
+  message (STATUS "LAPACK_LIBRARIES=${LAPACK_LIBRARIES}")
 endif()
 
 
@@ -89,6 +89,20 @@ elseif(WIN32)
   set(SWIGFAISS_DEST win32)
 else()
   set(SWIGFAISS_DEST linux)
+  foreach (_file /usr/lib64/libgomp.so
+  /usr/lib64/libgomp.so.1
+  /usr/lib64/libquadmath.so.0
+  /usr/lib64/libgfortran.so.3
+  /usr/lib64/libopenblas.so.0)
+  if(EXISTS ${_file})
+    get_filename_component(_resolvedFile "${_file}" REALPATH)
+    get_filename_component(_filename "${_file}" NAME)
+    install(
+      FILES ${_resolvedFile}
+      DESTINATION ${PROJECT_SOURCE_DIR}/../src/main/resources/${SWIGFAISS_DEST}
+      RENAME ${_filename})
+  endif()
+  endforeach()
 endif()
 
 install(TARGETS swigfaiss
