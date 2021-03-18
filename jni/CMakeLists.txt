@@ -1,4 +1,4 @@
-jni/CMakeLists.txtcmake_minimum_required(VERSION 3.17 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.17 FATAL_ERROR)
 
 project(faiss-java
   VERSION 1.6.4
