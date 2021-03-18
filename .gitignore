@@ -11,3 +11,5 @@ a.py
 wip
 jni/swigfaiss.cpp
 jni/_swigfaiss.so
+jni/build
+jni/swigfaissJAVA_wrap.cxx
