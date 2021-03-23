@@ -19,7 +19,16 @@ public class JFaissInitializer {
                     faiss_library = JFaissConstants.SWIGFAISS_SO_FILE_UNIX;
                     System.out.println("AVX2 was not found on the system. Using generic library for faiss");
                 }
-                NativeUtils2.loadLibraryFromJar(faiss_library, JFaissConstants.REQUIRED_SO_FILE_UNIX);
+                try {
+                    NativeUtils2.loadLibraryFromJar(faiss_library, JFaissConstants.REQUIRED_SO_FILE_UNIX);
+                } catch( Exception e) {
+                    if (isAvxAvailable) {
+                        // Fallback to generic library
+                        System.out.println("AVX2 library was not found");
+                        NativeUtils2.loadLibraryFromJar(JFaissConstants.SWIGFAISS_SO_FILE_UNIX, JFaissConstants.REQUIRED_SO_FILE_UNIX);
+                    }
+                }
+
             } else if (JFaissConstants.isMac()) {
                 String faiss_library;
                 if (isAvxAvailable) {
@@ -29,7 +38,16 @@ public class JFaissInitializer {
                     faiss_library = JFaissConstants.SWIGFAISS_SO_FILE_DARWIN;
                     System.out.println("AVX2 was not found on the system. Using generic library for faiss");
                 }
-                NativeUtils2.loadLibraryFromJar(faiss_library);
+                try {
+                    NativeUtils2.loadLibraryFromJar(faiss_library);
+                }
+                catch( Exception e) {
+                    if (isAvxAvailable) {
+                        // Fallback to generic library
+                        System.out.println("AVX2 library was not found");
+                        NativeUtils2.loadLibraryFromJar(JFaissConstants.SWIGFAISS_SO_FILE_DARWIN);
+                    }
+                }
             } else {
                 throw new Exception("This OS is not supported");
             }

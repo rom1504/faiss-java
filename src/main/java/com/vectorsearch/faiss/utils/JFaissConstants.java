@@ -56,9 +56,10 @@ public class JFaissConstants {
             sb.append(line);
             sb.append(System.getProperty("line.separator"));
         }
-        String result = builder.toString();
+        String result = sb.toString().trim();
+        System.out.println(result);
         process.waitFor();
-        return result.charAt(result.length() - 1) == 1;
+        return result.charAt(result.length() - 1) == '1';
     }
 
     private static boolean isAvx2AvailableUnix() throws Exception {
