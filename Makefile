@@ -7,8 +7,16 @@ else
 	CMAKE_CMD := cmake3
 endif
 
-FAISS_ENABLE_GPU := OFF
-FAISS_OPT_LEVEL := generic
+ifeq ($(FAISS_OPT_LEVEL),)
+    FAISS_OPT_LEVEL := generic
+endif
+
+ifeq ($(FAISS_ENABLE_GPU),)
+    FAISS_ENABLE_GPU := OFF
+endif
+
+
+
 CMAKE_ARGS := -DCMAKE_INSTALL_PREFIX=dist -DFAISS_ENABLE_GPU=${FAISS_ENABLE_GPU} -DFAISS_ENABLE_PYTHON=OFF -DBUILD_TESTING=OFF -DFAISS_OPT_LEVEL=${FAISS_OPT_LEVEL} -DCMAKE_BUILD_TYPE=Release
 
 help: ## Print the help
@@ -30,4 +38,7 @@ build_java_only: ## Build java without jni
 	mvn -B package
 
 test_java: build_jni ## Test java
+	mvn -B clean test -Dtest=FaissTestRunner
+
+test_java_only: ## Test java
 	mvn -B clean test -Dtest=FaissTestRunner

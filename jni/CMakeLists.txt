@@ -19,14 +19,6 @@ set(CMAKE_SWIG_FLAGS -Doverride= -package com.vectorsearch.faiss.swig)
 set(CMAKE_SWIG_OUTDIR ${PROJECT_SOURCE_DIR}/../src/main/java/com/vectorsearch/faiss/swig)
 
 set(CMAKE_PREFIX_PATH ${PROJECT_SOURCE_DIR}/../faiss/dist/)
-
-find_library(FAISS_LIBRARY faiss REQUIRED)
-if (FAISS_LIBRARY)
-  set(FAISS_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/../faiss/dist/include/)
-  message (STATUS "USING FAISS LIBRARY: ${FAISS_LIBRARY}")
-  message (STATUS "USING FAISS INCLUDE DIR: ${FAISS_INCLUDE_DIRS}")
-endif()
-
 set(FAISS_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/../faiss/dist/include/)
 
 set_source_files_properties(swigfaiss.swig PROPERTIES
@@ -52,6 +44,25 @@ swig_add_library(swigfaiss
   LANGUAGE java
   SOURCES swigfaiss.swig
 )
+
+if(FAISS_OPT_LEVEL STREQUAL "avx2")
+
+  target_compile_options(swigfaiss PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-mavx2 -mfma -mf16c -mpopcnt>)
+  set_target_properties(swigfaiss PROPERTIES OUTPUT_NAME "swigfaiss_avx2")
+  find_library(FAISS_LIBRARY faiss_avx2 REQUIRED)
+elseif(FAISS_OPT_LEVEL STREQUAL "sse4")
+  target_compile_options(swigfaiss PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-msse4 -mpopcnt>)
+  set_target_properties(swigfaiss PROPERTIES OUTPUT_NAME "swigfaiss_sse4")
+  find_library(FAISS_LIBRARY faiss_sse4 REQUIRED)
+else()
+  find_library(FAISS_LIBRARY faiss REQUIRED)
+endif()
+
+if (FAISS_LIBRARY)
+  set(FAISS_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/../faiss/dist/include/)
+  message (STATUS "USING FAISS LIBRARY: ${FAISS_LIBRARY}")
+  message (STATUS "USING FAISS INCLUDE DIR: ${FAISS_INCLUDE_DIRS}")
+endif()
 
 find_package(Java REQUIRED)
 include(UseJava)
