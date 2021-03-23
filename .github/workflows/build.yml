@@ -41,7 +41,7 @@ jobs:
           make build_java_only
       - name: test
         run: |
-          make test
+          make test_java_only
       - name: Upload jni library
         uses: actions/upload-artifact@v2
         with:
@@ -103,7 +103,7 @@ jobs:
         make build_java_only
     - name: test
       run: |
-        make test
+        make test_java_only
     - name: Upload jni library
       uses: actions/upload-artifact@v2
       with:

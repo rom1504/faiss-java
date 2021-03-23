@@ -39,3 +39,6 @@ build_java_only: ## Build java without jni
 
 test_java: build_jni ## Test java
 	mvn -B clean test -Dtest=FaissTestRunner
+
+test_java_only: ## Test java
+	mvn -B clean test -Dtest=FaissTestRunner
