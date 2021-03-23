@@ -9,10 +9,19 @@ public class JFaissInitializer {
     public static void initialize() throws Exception {
         if (!initialized) {
             initialized = true;
+            boolean isAvxAvailable = JFaissConstants.isAvx2Available();
             if (JFaissConstants.isUnix()) {
-                NativeUtils2.loadLibraryFromJar(JFaissConstants.SWIGFAISS_SO_FILE_UNIX, JFaissConstants.REQUIRED_SO_FILE_UNIX);
+                String faiss_library = JFaissConstants.SWIGFAISS_SO_FILE_UNIX;
+                if (isAvxAvailable) {
+                    faiss_library = JFaissConstants.SWIGFAISS_SO_FILE_AVX2_UNIX;
+                }
+                NativeUtils2.loadLibraryFromJar(faiss_library, JFaissConstants.REQUIRED_SO_FILE_UNIX);
             } else if (JFaissConstants.isMac()) {
-                NativeUtils2.loadLibraryFromJar(JFaissConstants.SWIGFAISS_SO_FILE_DARWIN);
+                String faiss_library = JFaissConstants.SWIGFAISS_SO_FILE_DARWIN;
+                if (isAvxAvailable) {
+                    faiss_library = JFaissConstants.SWIGFAISS_SO_FILE_AVX2_DARWIN;
+                }
+                NativeUtils2.loadLibraryFromJar(faiss_library);
             } else {
                 throw new Exception("This OS is not supported");
             }
